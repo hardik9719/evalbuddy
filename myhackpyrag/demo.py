@@ -7,7 +7,29 @@ from langchain_community.embeddings import OllamaEmbeddings
 
 # Setup Streamlit interface
 st.title("Chat with Webpage 🌐")
-st.caption("This app allows you to chat with a webpage using local Llama-3 and RAG")
+st.caption("This app allows you to chat with a webpage using local Llama-2 and RAG")
+
+# Add Python code analysis section
+python_code = st.text_area("Enter Python code to analyze", height=200)
+analyze_button = st.button("Analyze Code")
+
+if analyze_button and python_code:  # Only run analysis when button is clicked and code exists
+    prompt = f"""Analyze this Python code and provide:
+    1. Brief summary
+    2. Main functionality
+    3. Key components/libraries used
+    4. Potential improvements (if any)
+    
+    Code:
+    {python_code}"""
+    
+    with st.spinner('Analyzing code...'):  # Add loading indicator
+        response = ollama.chat(model='llama2', messages=[{'role': 'user', 'content': prompt}])
+        
+        with st.card("Code Analysis Summary"):
+            st.markdown(response['message']['content'])
+            st.divider()
+            st.caption("Analysis provided by Llama-2")
 
 # Get webpage URL input
 webpage_url = st.text_input("Enter Webpage URL", type="default")
