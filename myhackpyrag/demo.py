@@ -4,10 +4,31 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import WebBaseLoader
 from langchain_community.vectorstores import Chroma
 from langchain_community.embeddings import OllamaEmbeddings
+import random
+import plotly.express as px
+import pandas as pd
 
 # Setup Streamlit interface
 st.title("Chat with Webpage 🌐")
 st.caption("This app allows you to chat with a webpage using local Llama-2 and RAG")
+
+# Radar chart function
+def radar_chart(val):  
+    df = pd.DataFrame(dict(
+    r=[random.randint(0,val),
+       random.randint(0,val),
+       random.randint(0,val),
+       random.randint(0,val),
+       random.randint(0,val)],
+    theta=['processing cost','mechanical properties','chemical stability',
+           'thermal stability', 'device integration']))
+    fig = px.line_polar(df, r='r', theta='theta', line_close=True)
+    st.write(fig)
+
+# Add radar chart section
+st.subheader("Radar Chart Demo")
+val = st.slider('Select value', 0, 10, 1)
+radar_chart(val)
 
 # Add Python code analysis section
 python_code = st.text_area("Enter Python code to analyze", height=200)
