@@ -8,59 +8,9 @@ from evaluator import evaluate_project, extract_and_summarize_code, generate_eva
 
 # Page configuration
 st.set_page_config(layout="wide", page_title="Project Evaluation Dashboard")
-static_summary = f"""
-Summary of Complete Codebase:
-**Narrative Summary**
-
-This code implements a classic game of Minesweeper in C++. The program displays an 8x8 grid, with some cells containing hidden mines. The player's objective is to reveal all non-mine cells without detonating any mine. The game uses a simple text-based interface, where the player can navigate the grid using keyboard inputs (W, A, S, D keys) and make selections by clicking on cells.
-
-The code uses object-oriented programming (OOP) principles to encapsulate the game's logic and data structures. It defines a `Grid` class that represents the 8x8 grid, with methods for initializing the grid, counting bomb locations, and displaying the current state of the grid. The game loop continuously updates the display and checks for user input until the game is over.
-
-The code also implements some interesting aspects, such as using a `cursor_i` and `cursor_j` pair to keep track of the player's position on the grid. When the player clicks on a cell, the program checks if it contains a mine or not, and updates the grid accordingly. The game ends when all non-mine cells are revealed or when the player detonates a mine.
-
-**---**
-
-```json
-{{
-    "summary": "Minesweeper game implemented in C++",
-    "main_functionality": [
-        "Game loop to update display and check user input"
-        "Initialization of 8x8 grid with mines and bomb locations"
-        "Reveal non-mine cells without detonating mines"
-        "Detect game over conditions (e.g., revealing all non-mine cells or detonating a mine)"
-    ],
-    "technologies": {{
-        "languages": ["C++"],
-        "frameworks": [],
-        "libraries": [
-            {{
-                "name": "CG ALIB",
-                "description": "C graphics library"
-            }}
-        ],
-        "ai_components": []
-    }},
-    "code_patterns": [
-        "Object-Oriented Programming (OOP)"
-        "Event-driven programming using keyboard and mouse inputs"
-        "Game loop with continuous updating of display and checking user input"
-    ],
-    "complexity_analysis": {{
-        "level": "low",
-        "explanation": "Simple game logic with minimal complexity"
-    }},
-    "potential_improvements": [
-        "Optimization for performance on lower-end hardware"
-        "Add additional game features (e.g., multiple levels, power-ups)"
-        "Improve user interface for better accessibility and usability"
-    ]
-}}
-```
-Note that I did not include any AI-related components in the analysis, as none were present in the provided code. If you'd like to add an AI component to the Minesweeper game, it would require a significant overhaul of the existing codebase.
-"""
 
 # Main title
-st.title("🎯 Project Evaluation Dashboard")
+st.title("🎯 MyEvalBuddy")
 
 metrics = []
 # Function to simulate getting evaluation factors from a language model
@@ -76,7 +26,6 @@ def get_evaluation_factors(title, description):
     except FileNotFoundError:
         metrics = []
     # Add to metrics list and save
-    print(new_metric)
     metrics.append(new_metric)
     with open('metrics.json', 'w') as f:
         json.dump({"metrics": metrics}, f, indent=2)
@@ -141,17 +90,20 @@ with col1:
     
     st.subheader("Project Details")
     github_link = st.text_input("GitHub File Link")
-    if st.button('Static Summary Load',key='static'):
-        st.session_state.code_summary = static_summary
     if st.button("Extract and Summarize Code",key='dynamic'):
         start_time = time.time()
         code_summary = extract_and_summarize_code(github_link, True)
         end_time = time.time()
         st.info(f"Summary computation took {end_time - start_time:.3f} seconds")
         st.session_state.code_summary = code_summary
-    with st.container(border=True):
-        st.header('Doc Text')
-        st.text(st.session_state.doc_text)
+    
+    # New section for Doc Text input and save button
+    st.header('Doc Text')
+    doc_text_input = st.text_area("Enter Document Text", value=st.session_state.doc_text)
+    if st.button("Save Doc Text"):
+        st.session_state.doc_text = doc_text_input  # Save to session state
+        st.success("Document text saved successfully!")
+    
     with st.container(border=True):
         st.header('Dashboard Summary')
         st.text(st.session_state.code_summary)
@@ -159,8 +111,6 @@ with col1:
     
     # File upload section
     st.subheader("Upload Project Files")
-    uploaded_slides = st.file_uploader("Upload Presentation Slides", type=["pdf", "ppt", "pptx"])
-    uploaded_docs = st.file_uploader("Upload Additional Documents", type=["pdf", "doc", "docx"])
     uploaded_zip = st.file_uploader("Upload Additional Zip", type=["zip"])
     if uploaded_zip:
         if st.button("Extract and Summarize ZIP"):
@@ -170,7 +120,6 @@ with col1:
             st.text_area("Code Summary", code_summary)
             st.info(f"Summary computation took {end_time - start_time:.3f} seconds")
         st.subheader("Evaluate Project")
-    st.text(st.session_state.code_summary)
  
 
 

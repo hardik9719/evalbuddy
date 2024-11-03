@@ -108,6 +108,74 @@
         "Time to market for new product or service offerings",
         "Number of patents or intellectual property filings made by the company"
       ]
+    },
+    {
+      "title": "PHD Student",
+      "description": "PHD Student in Psychology",
+      "weightage": 10,
+      "evaluationFactors": [
+        {
+          "factorName": "Research Output",
+          "factorDescription": "Number of peer-reviewed publications per year",
+          "metricDescription": "Measures the student's ability to produce high-quality research outputs",
+          "targetValue": null
+        },
+        {
+          "factorName": "Teaching Experience",
+          "factorDescription": "Total number of hours taught per semester",
+          "metricDescription": "Assesses the student's ability to apply theoretical knowledge in practical teaching settings",
+          "targetValue": null
+        },
+        {
+          "factorName": "Thesis Quality",
+          "factorDescription": "Average rating from thesis committee members (scale: 1-5)",
+          "metricDescription": "Evaluates the student's ability to produce a high-quality PhD thesis",
+          "targetValue": {
+            "min": 4,
+            "max": 5
+          }
+        },
+        {
+          "factorName": "Collaboration and Networking",
+          "factorDescription": "Number of international collaborations per year",
+          "metricDescription": "Assesses the student's ability to establish and maintain professional networks globally",
+          "targetValue": null
+        },
+        {
+          "factorName": "Research Grants",
+          "factorDescription": "Number of research grants secured per year",
+          "metricDescription": "Evaluates the student's ability to secure funding for research projects",
+          "targetValue": null
+        },
+        {
+          "factorName": "Student Supervision",
+          "factorDescription": "Average student supervision satisfaction rating (scale: 1-5)",
+          "metricDescription": "Assesses the student's ability to provide effective supervision and mentorship",
+          "targetValue": {
+            "min": 4,
+            "max": 5
+          }
+        },
+        {
+          "factorName": "Academic Publications per Year",
+          "factorDescription": "Number of academic publications in top-tier journals per year",
+          "metricDescription": "Evaluates the student's ability to publish high-impact research outputs",
+          "targetValue": null
+        }
+      ]
+    },
+    {
+      "title": "PHD Student",
+      "description": "PhD Student in Chemistry",
+      "weightage": 10,
+      "evaluationFactors": [
+        "Number of publications in peer-reviewed journals within the past year (1-3 publications)",
+        "Average citation count per publication (>= 2 citations)",
+        "Progress toward dissertation completion (i.e., chapter completion rate)",
+        "Quality and relevance of thesis committee feedback",
+        "Participation and engagement in academic conferences and workshops (>2 events)",
+        "Frequency and quality of peer review contributions to academic journals (>1 manuscript)"
+      ]
     }
   ]
 }

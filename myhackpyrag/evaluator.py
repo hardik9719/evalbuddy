@@ -61,7 +61,6 @@ def extract_and_summarize_code(source, is_github_link):
     all_code = ""
 
     for root, dirs, files in os.walk(temp_dir):
-        print(files)
         for file in files:
             file_path = os.path.join(root, file)
             # Check if the file should be ignored
@@ -81,7 +80,6 @@ def extract_and_summarize_code(source, is_github_link):
     # Clean up and return
     shutil.rmtree(temp_dir)
     end = time.perf_counter()
-    print(f'Took {end-start:.3f} seconds')
     return summarize_code(all_code, "Complete Codebase")
 
 def summarize_code(code, file_path):
@@ -119,12 +117,10 @@ Ensure the JSON portion is valid JSON. Focus on technical accuracy and be specif
 """
     response = get_llm_response(prompt, 'text')
     end = time.perf_counter()
-    print(f' SUMMARIZE : Took {end-start:.3f} seconds')
 
     return f"\nSummary of {file_path}:\n{response}\n"
 
 def evaluate_project(doc_text, code_summary):
-    print('Inside eval')
     with open('metrics.json', 'r') as f:
         metrics_data = json.load(f)
 
@@ -160,7 +156,6 @@ def evaluate_project(doc_text, code_summary):
 
     # Here you would call your LLM (e.g., Ollama) with this prompt
     # For demonstration, I'll just return the prompt
-    print('asking prompt')
     return get_llm_response(prompt, 'json')
 
 def get_llm_response(prompt, response_type='text', model='llama3.2'):
@@ -184,7 +179,6 @@ def get_llm_response(prompt, response_type='text', model='llama3.2'):
             response += chunk['message']['content']
     response = response.strip()
     print(response)
-    # Process based on expected response type
     if response_type == 'json':
         try:
             return json.loads(response)
