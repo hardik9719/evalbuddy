@@ -105,7 +105,6 @@ def render_radar_chart():
         showlegend=False
     )
     return fig
-chart_placeholder = st.empty()
 
 # Initial render of the chart
 with st.form("metric_form"):
@@ -129,7 +128,6 @@ with st.form("metric_form"):
         st.json(new_metric)
         st.success("New metric added successfully!")
         # Re-render the radar chart
-        chart_placeholder.plotly_chart(render_radar_chart())
 
 # Create columns for layout
 col1, col2 = st.columns([1, 2])
@@ -140,9 +138,6 @@ if 'doc_text' not in st.session_state:
 if 'code_insight' not in st.session_state:
     st.session_state.insight = "Nothing much"
 with col1:
-    st.subheader("Domain Selection")
-    domains = ["Health", "Education", "Finance", "Environment", "Technology"]
-    selected_domain = st.selectbox("Select Project Domain", domains)
     
     st.subheader("Project Details")
     github_link = st.text_input("GitHub File Link")
@@ -153,6 +148,7 @@ with col1:
         code_summary = extract_and_summarize_code(github_link, True)
         end_time = time.time()
         st.info(f"Summary computation took {end_time - start_time:.3f} seconds")
+        st.session_state.code_summary = code_summary
     with st.container(border=True):
         st.header('Doc Text')
         st.text(st.session_state.doc_text)
@@ -175,35 +171,13 @@ with col1:
             st.info(f"Summary computation took {end_time - start_time:.3f} seconds")
         st.subheader("Evaluate Project")
     st.text(st.session_state.code_summary)
-    # if st.button("Get Feedback"):
-    #     print(st.session_state.doc_text)
-    #     start_time = time.time()
-
-    #     # Read project description from uploaded documents or a text input
-    #     if st.session_state.doc_text and st.session_state.code_summary:
-    #         st.write('hello')
-    #         evaluation = evaluate_project(st.session_state.doc_text, code_summary)  # Call the evaluate_project function
-    #         end_time = time.time()
-    #     #     st.json(evaluation)  # Display the evaluation results
-    #     #     st.info(f"Evaluation computation took {end_time - start_time:.3f} seconds")
-    #     #     # Update radar chart with the new metric score
-    #     #     # Assuming the evaluation contains a score for a specific metric
-    #     #     score = evaluation.get("AI Integration Score", {}).get("score", 0)  # Adjust based on actual structure
-    #     #     st.session_state.radar_scores.append(score)  # Append score to radar chart data
-    #     #     chart_placeholder.plotly_chart(render_radar_chart())  # Re-render the radar chart
+ 
 
 
 with col2:
     st.subheader("Evaluation Metrics")
-    
-    # AI Usage Metric
-    st.markdown("### AI Integration Score")
-    ai_score = random.randint(60, 95)
-    st.progress(ai_score/100)
-    st.caption(f"AI Usage Score: {ai_score}%")
-    
-    # Creativity Level
-    st.markdown("### Innovation Metrics")
+    chart_placeholder = st.empty()
+ 
 
 
 
@@ -212,19 +186,10 @@ with col2:
 
     
     # Impact Assessment
-    st.markdown("### Impact Assessment")
-    impact_metrics = {
-        "Social Impact": random.randint(1, 10),
-        "Technical Achievement": random.randint(1, 10),
-        "Market Potential": random.randint(1, 10)
-    }
-    
-    for metric, value in impact_metrics.items():
-        st.metric(metric, f"{value}/10")
+
     if st.button('Feedback'):
         start_time = time.time()
         st.info('Evaluation in progress...')
-        # result = evaluate_project(st.session_state.doc_text, st.session_state.code_summary)
         try:
             with open('static_insight.json', 'r') as f:
                 result = json.load(f)
@@ -232,6 +197,7 @@ with col2:
         except FileNotFoundError:
             st.error("Error: static_insight.json file not found.")
             result = {}  
+        result = evaluate_project(st.session_state.doc_text, st.session_state.code_summary)
         end_time = time.time()
         st.info(f"Evaluation computation took {end_time - start_time:.3f} seconds")
         
@@ -246,6 +212,7 @@ with col2:
                 st.metric(label="Score", value=f"{score}/10")
                 st.write(f"**Justification:** {justification}")
                 st.markdown("---")  # Separator for cards
+        
         chart_placeholder.plotly_chart(render_radar_chart())
 
 

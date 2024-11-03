@@ -95,6 +95,19 @@
         "Customer satisfaction rating (based on feedback from real-world applications)",
         "Average size reduction in material usage compared to traditional methods"
       ]
+    },
+    {
+      "title": "CEO of Company",
+      "description": "CEO perspective",
+      "weightage": 10,
+      "evaluationFactors": [
+        "Number of new customers acquired within the last quarter",
+        "Revenue growth compared to the previous year",
+        "Net promoter score (NPS) indicating customer satisfaction",
+        "Level of employee engagement and retention rate",
+        "Time to market for new product or service offerings",
+        "Number of patents or intellectual property filings made by the company"
+      ]
     }
   ]
 }

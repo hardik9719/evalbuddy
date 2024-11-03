@@ -90,15 +90,8 @@ def summarize_code(code, file_path):
 You are an expert code analyzer. Please analyze the following code file and provide both a detailed narrative summary and structured analysis.
 
 File: {file_path}
-
 Code:
 {code}
-
-Please provide your analysis in two parts:
-
-Part 1: Narrative Summary
-Provide a detailed paragraph explaining what this code does, its purpose, and how it works. Include any notable implementation details or interesting aspects of the code. This should be a well-written, technical explanation that a developer would find useful.
-
 Part 2: Structured Analysis (in JSON format):
 {{
     "summary": "Brief overview of what this code does",
@@ -122,9 +115,7 @@ Part 2: Structured Analysis (in JSON format):
         "List of suggested improvements or optimizations"
     ]
 }}
-
-Start your response with the narrative summary, followed by a line containing only '---', and then the JSON analysis.
-Ensure the JSON portion is valid JSON. Focus on technical accuracy and be specific about AI-related components if present.
+Ensure the JSON portion is valid JSON. Focus on technical accuracy and be specific about AI-related components if present. Nothings besies a JSON output
 """
     response = get_llm_response(prompt, 'text')
     end = time.perf_counter()
