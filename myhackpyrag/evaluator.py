@@ -122,8 +122,14 @@ def ollama_chat(prompt, model='llama2'):
             response += chunk['message']['content']
     return response.strip()
 
+# First get the code summary
 with open('test_urls.py.zip', 'rb') as zip_file:
-    summary = summarize_codebase(zip_file)
-print(summary)
+    code_summary = summarize_codebase(zip_file)
 
-# summarize_codebase('test_urls.py.zip')
+# Then read the project description
+with open('project_description.txt', 'r', encoding='utf-8') as doc_file:
+    doc_text = doc_file.read()
+
+# Now evaluate both together
+evaluation = evaluate_project(doc_text, code_summary)
+print(json.dumps(evaluation, indent=2))  # Pretty print the results
