@@ -30,7 +30,8 @@ def get_evaluation_factors(title, description):
   
     
     # Add to metrics list and save
-    new_metric["id"] = len
+    new_metric["id"] = len(metrics) + 1
+    print(new_metric) 
     metrics.append(new_metric)
     with open('metrics.json', 'w') as f:
         json.dump({"metrics": metrics}, f, indent=2)
@@ -89,11 +90,18 @@ with col2:
     
     # Creativity Level
     st.markdown("### Innovation Metrics")
-    def radar_chart(val=7):  
+    def radar_chart():
+        # Read metrics from json file
+        with open('metrics.json', 'r') as f:
+            data = json.load(f)
+            metrics = data.get('metrics', [])
+        
+        # Create dataframe using metric titles
         df = pd.DataFrame(dict(
-            r=[random.randint(0,val) for _ in range(5)],
-            theta=['AI Integration', 'Technical Innovation', 'Problem Solving',
-                  'Market Potential', 'Scalability']))
+            r=[random.randint(0, 10) for _ in range(len(metrics))],
+            theta=[metric['title'] for metric in metrics]
+        ))
+        
         fig = px.line_polar(df, r='r', theta='theta', line_close=True)
         fig.update_layout(
             polar=dict(radialaxis=dict(visible=True, range=[0, 10])),
@@ -101,7 +109,7 @@ with col2:
         )
         st.plotly_chart(fig)
 
-    radar_chart()
+    radar_chart() 
     
     # Impact Assessment
     st.markdown("### Impact Assessment")

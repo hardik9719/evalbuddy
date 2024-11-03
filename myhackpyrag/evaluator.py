@@ -246,5 +246,5 @@ Ensure each factor is concise but descriptive enough to be useful for evaluation
 # # # Now evaluate both together
 # evaluation = evaluate_project(doc_text, code_summary)
 # print(json.dumps(evaluation, indent=2))  # Pretty print the results
-
-print(generate_evaluation_factors('Design Patterns',' Best Desgin patterns'))
+if __name__ =='__main__':
+    print(generate_evaluation_factors('Design Patterns',' Best Desgin patterns'))
