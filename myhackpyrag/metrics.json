@@ -44,6 +44,19 @@
         "Unexpected or surprising features that add value",
         "Reimagining traditional concepts or processes"
       ]
+    },
+    {
+      "title": "Design Patterns",
+      "description": "simple ones",
+      "weightage": 10,
+      "evaluationFactors": [
+        "Number of design patterns implemented (min, max)",
+        "Percentage of code reusability achieved",
+        "Ease of maintenance and scalability (scale: 1-5)",
+        "Complexity of design patterns used (scale: 1-5)",
+        "Adherence to industry standards and best practices (scale: 1-5)",
+        "Potential for improvement in maintainability and readability"
+      ]
     }
   ]
 }

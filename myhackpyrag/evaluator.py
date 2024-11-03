@@ -8,19 +8,16 @@ import json
 import ollama
 
 def extract_text_from_document(doc_file):
-    # Read the uploaded document file
+    """
+    Extract text content from an uploaded document file
+    """
+    # Check file extension
     file_extension = os.path.splitext(doc_file.name)[1].lower()
     if file_extension != '.txt':
         raise ValueError("Only .txt files are supported")
-        
-    with tempfile.NamedTemporaryFile(delete=False, suffix='.txt') as tmp_file:
-        tmp_file.write(doc_file.read())
-        tmp_file_path = tmp_file.name
-
-    with open(tmp_file_path, 'r', encoding='utf-8', errors='ignore') as f:
-        text = f.read()
     
-    os.unlink(tmp_file_path)  # Delete the temporary file
+    # Read the file content directly
+    text = doc_file.read().decode('utf-8', errors='ignore')
     return text
 
 def summarize_codebase(source, is_github_link=False):
@@ -163,7 +160,7 @@ Please analyze the contents of the zip file, provide the requested information f
 """
     return get_llm_response(prompt, 'json')
 
-def get_llm_response(prompt, response_type='text', model='llama2'):
+def get_llm_response(prompt, response_type='text', model='llama3.2'):
     """
     Generic function to get responses from the LLM
     
@@ -183,7 +180,7 @@ def get_llm_response(prompt, response_type='text', model='llama2'):
         if 'message' in chunk:
             response += chunk['message']['content']
     response = response.strip()
-    
+    print(response)
     # Process based on expected response type
     if response_type == 'json':
         try:
@@ -202,13 +199,46 @@ def get_llm_response(prompt, response_type='text', model='llama2'):
     else:
         return response
 
+def generate_evaluation_factors(title, description):
+    prompt = f"""
+Given this metric title and description for a project evaluation system, generate specific evaluation factors.
+Each factor should be clear, measurable, and directly related to assessing this metric.
 
-url  = "https://github.com/dougdragon/browser-info.git"
-url  = "https://github.com/jimmc414/code_lens_llm.git"
-# First get the code summary
-# with open('test_urls.py.zip', 'rb') as zip_file:
-code_summary = summarize_codebase(url,True)
-print(code_summary)
+Title: {title}
+Description: {description}
+
+Generate a list of 5-8 evaluation factors that are:
+1. Specific and measurable
+2. Directly related to the metric
+3. Clear and actionable
+
+Format your response as a json object no extra text at the end , for example:
+{{
+        "title": title,
+        "description": description,
+        "weightage": 10,  # Default weightage
+        "evaluationFactors": [
+        "Addressing a clear market need or gap",
+        "Potential target audience size and reach",
+        "Unique selling proposition (USP) compared to existing solutions",
+        "Revenue model or monetization strategy (if applicable)",
+        "Feasibility of implementation in the real world",
+        "Potential for attracting investors or stakeholders"
+      ]
+    }}
+  
+
+Ensure each factor is concise but descriptive enough to be useful for evaluation.
+"""
+    return get_llm_response(prompt, 'json')
+
+
+# url  = "https://github.com/dougdragon/browser-info.git"
+# url  = "https://github.com/jimmc414/code_lens_llm.git"
+# # First get the code summary
+# # with open('test_urls.py.zip', 'rb') as zip_file:
+# code_summary = summarize_codebase(url,True)
+# print(code_summary)
 # # Then read the project description
 # with open('project_description.txt', 'r', encoding='utf-8') as doc_file:
 #     doc_text = doc_file.read()
@@ -217,3 +247,4 @@ print(code_summary)
 # evaluation = evaluate_project(doc_text, code_summary)
 # print(json.dumps(evaluation, indent=2))  # Pretty print the results
 
+print(generate_evaluation_factors('Design Patterns',' Best Desgin patterns'))

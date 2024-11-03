@@ -3,6 +3,8 @@ import pandas as pd
 import plotly.express as px
 import random
 from PIL import Image
+import json
+from evaluator import generate_evaluation_factors
 
 # Page configuration
 st.set_page_config(layout="wide", page_title="Project Evaluation Dashboard")
@@ -13,11 +15,26 @@ st.title("🎯 Project Evaluation Dashboard")
 metrics = []
 # Function to simulate getting evaluation factors from a language model
 def get_evaluation_factors(title, description):
-    # This is a placeholder for the actual call to a language model
-    # Replace this with the actual API call to get evaluation factors
-    prompt = f"Title: {title}\nDescription: {description}\nProvide key evaluation factors:"
-    # Simulate response
-    return ["Factor 1", "Factor 2", "Factor 3"]
+    # Get factors from the LLM
+    new_metric = generate_evaluation_factors(title, description)
+    
+    # Read existing metrics
+    try:
+        with open('metrics.json', 'r') as f:
+            data = json.load(f)
+            metrics = data.get('metrics', [])
+    except FileNotFoundError:
+        metrics = []
+    
+    # Create new metric object
+  
+    
+    # Add to metrics list and save
+    new_metric["id"] = len
+    metrics.append(new_metric)
+    with open('metrics.json', 'w') as f:
+        json.dump({"metrics": metrics}, f, indent=2)
+    return new_metric
 
 # Add a form to accept metric title and description
 st.subheader("Add New Metric")
