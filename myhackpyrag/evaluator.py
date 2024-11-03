@@ -119,45 +119,41 @@ Ensure the JSON portion is valid JSON. Focus on technical accuracy and be specif
     return f"\nSummary of {file_path}:\n{response}\n"
 
 def evaluate_project(doc_text, code_summary):
+    with open('metrics.json', 'r') as f:
+        metrics_data = json.load(f)
+
+    # Create a dynamic string for metrics
+    metric_criteria = "\n".join(
+        [f"{metric['title']}: {metric['description']}\n   Evaluation Factors: {', '.join(metric['evaluationFactors'])}"
+         for metric in metrics_data['metrics']])
+
+    # Create the expected output structure
+    output_structure = {metric['title']: {"score": "<score>", "justification": "<justification>"} for metric in
+                        metrics_data['metrics']}
+    output_structure_str = json.dumps(output_structure, indent=2)
+
     prompt = f"""
-You are an expert code analyst and project evaluator. Your task is to summarize the contents of a zip file containing multiple code files, and then evaluate the project based on specific criteria.
+    You are an expert code analyst and project evaluator. Your task is to evaluate the project based on specific criteria using the provided project description and code summary.
 
+    Criteria:
+    {metric_criteria}
 
+    Project Description:
+    {doc_text}
 
-Part 1: Project Evaluation
-Using the project description and code summary, evaluate the project on the following criteria. Provide a score from 1 to 10 for each criterion and justify your scoring.
+    Code Summary:
+    {code_summary}
 
-Criteria:
-1. Market Potential and Business Viability
-2. AI Integration and Innovation
-3. Creativity Level
+    Your evaluation should be in JSON format for all the metrics available in the criteria, with each metric having the following structure:
+    {output_structure_str}
 
-Project Description:
-{doc_text}
+    Replace <score> with a number from 1 to 10, and <justification> with proper highly critique justification and reasoning for the evaluation.
 
-Code Summary:
-{code_summary}
+    Provide your evaluation in valid JSON format only, without any additional explanation.
+    """
 
-
-Your evaluation should be in JSON format like this:
-{{
-    "Market Potential and Business Viability": {{
-        "score": <score>,
-        "justification": "<justification>"
-    }},
-    "AI Integration and Innovation": {{
-        "score": <score>,
-        "justification": "<justification>"
-    }},
-    "Creativity Level": {{
-        "score": <score>,
-        "justification": "<justification>"
-    }}
-}}
-
-Please analyze the contents of the zip file, provide the requested information for both parts, and evaluate the project. Your response should be in valid JSON format only, without any additional explanation.
-
-"""
+    # Here you would call your LLM (e.g., Ollama) with this prompt
+    # For demonstration, I'll just return the prompt
     return get_llm_response(prompt, 'json')
 
 def get_llm_response(prompt, response_type='text', model='llama3.2'):
@@ -234,17 +230,20 @@ Ensure each factor is concise but descriptive enough to be useful for evaluation
 
 
 # url  = "https://github.com/dougdragon/browser-info.git"
-# url  = "https://github.com/jimmc414/code_lens_llm.git"
-# # First get the code summary
-# # with open('test_urls.py.zip', 'rb') as zip_file:
-# code_summary = summarize_codebase(url,True)
-# print(code_summary)
-# # Then read the project description
-# with open('project_description.txt', 'r', encoding='utf-8') as doc_file:
-#     doc_text = doc_file.read()
+url  = "https://github.com/jimmc414/code_lens_llm.git"
+# First get the code summary
+# with open('test_urls.py.zip', 'rb') as zip_file:
+code_summary = summarize_codebase(url,True)
+print(code_summary)
+# Then read the project description
+with open('project_description.txt', 'r', encoding='utf-8') as doc_file:
+    doc_text = doc_file.read()
 
-# # # Now evaluate both together
-# evaluation = evaluate_project(doc_text, code_summary)
-# print(json.dumps(evaluation, indent=2))  # Pretty print the results
-if __name__ =='__main__':
-    print(generate_evaluation_factors('Design Patterns',' Best Desgin patterns'))
+# # Now evaluate both together
+evaluation = evaluate_project(doc_text, code_summary)
+print(json.dumps(evaluation, indent=2))  # Pretty print the results
+# if __name__ =='__main__':
+#     print(generate_evaluation_factors('Design Patterns',' Best Desgin patterns'))
+#     print(generate_evaluation_factors('10th Grade Project Exhibition',' Simple and easy to parse'))
+#     print(generate_evaluation_factors('Senior solutions architect',' Scalable solution'))
+#     print(generate_evaluation_factors('Art professional and Painter',' Ability to paint'))

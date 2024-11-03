@@ -1,7 +1,6 @@
 {
   "metrics": [
     {
-      "id": 1,
       "title": "Market Potential and Business Viability",
       "description": "Evaluates the project's potential for real-world application and commercial success. This metric considers factors such as addressing a clear market need or gap, the potential target audience size and reach, the unique selling proposition (USP) compared to existing solutions, the revenue model or monetization strategy (if applicable), feasibility of implementation in the real world, and potential for attracting investors or stakeholders. This metric helps assess whether the project has the potential to evolve beyond the hackathon into a viable product or service. It encourages participants to think about the practical applications and business aspects of their ideas, which is often a crucial factor in determining a project's overall success and impact.",
       "weightage": 30,
@@ -15,7 +14,6 @@
       ]
     },
     {
-      "id": 2,
       "title": "AI Integration and Innovation",
       "description": "Evaluates the project's effective use and integration of artificial intelligence technologies. This metric considers factors such as the relevance and appropriateness of AI application to the problem at hand, sophistication and complexity of AI models or algorithms employed, innovative use of AI beyond common applications, integration of multiple AI technologies or techniques (e.g., NLP, computer vision, machine learning), ethical considerations and responsible AI practices, performance and accuracy of AI components, and scalability of the AI solution. This metric helps assess how well the project leverages AI to solve problems or create value. It encourages participants to think critically about AI implementation, pushing beyond surface-level applications to create truly innovative and impactful AI-driven solutions. The metric also considers the ethical implications and real-world feasibility of the AI components, ensuring that projects not only showcase technical prowess but also demonstrate responsible and practical AI usage.",
       "weightage": 40,
@@ -30,7 +28,6 @@
       ]
     },
     {
-      "id": 3,
       "title": "Creativity Level",
       "description": "Evaluates the project's originality, innovation, and out-of-the-box thinking. This metric considers factors such as the uniqueness of the core idea or concept, novel approaches to solving existing problems, innovative combinations of technologies or methodologies, unconventional user interactions or interfaces, creative use of data or resources, originality in design (both visual and functional), unexpected or surprising features that add value, and reimagining traditional concepts or processes. This metric helps assess how well the project pushes boundaries and introduces fresh ideas. It encourages participants to think beyond conventional solutions and rewards those who take creative risks. The Creativity Level metric values projects that stand out from the crowd, either through entirely new concepts or through innovative twists on existing ideas. It also considers the creative aspects of both the technical implementation and the user-facing elements of the project.",
       "weightage": 30,
@@ -46,32 +43,45 @@
       ]
     },
     {
-      "title": "Design Patterns",
-      "description": "simple ones",
-      "weightage": 10,
-      "evaluationFactors": [
-        "Number of design patterns implemented (min, max)",
-        "Percentage of code reusability achieved",
-        "Ease of maintenance and scalability (scale: 1-5)",
-        "Complexity of design patterns used (scale: 1-5)",
-        "Adherence to industry standards and best practices (scale: 1-5)",
-        "Potential for improvement in maintainability and readability"
-      ]
-    },
+        "title": "10th Grade Project Exhibition",
+        "description": "Simple and easy to parse",
+        "weightage": 10,
+        "evaluationFactors": [
+          "Alignment with 10th grade curriculum learning objectives (scale: 1-5)",
+          "Project presentation quality (clarity, coherence, visual appeal) (scale: 1-5)",
+          "Student engagement and participation during project demonstration (scale: 1-5)",
+          "Quality of research and analysis conducted by students (scale: 1-5)",
+          "Demonstrated understanding of project constraints and assumptions",
+          "Project impact on 10th grade learning outcomes (as observed through student feedback) (scale: 1-5)"
+        ]
+      },
     {
-      "title": "10th Grade School Project: Simple One",
-      "description": "Simple One",
-      "weightage": 10,
-      "evaluationFactors": [
-        "Alignment with learning objectives and curriculum standards (80 points)",
-        "Creativity and originality of project design (60 points)",
-        "Quality and completion rate of project deliverables (70 points)",
-        "Effectiveness in promoting student engagement and motivation (50 points)",
-        "Feasibility and practicality of project resources and requirements (90 points)",
-        "Potential for long-term impact or scalability (40 points)",
-        "Clarity and concision of written explanations and reports (85 points)"
-      ],
-      "id": 5
-    }
+  "title": "Senior Solutions Architect",
+  "description": "Scalable Solution",
+  "weightage": 10,
+  "evaluationFactors": [
+    "Number of concurrent users supported by the solution",
+    "Total scalability factor (e.g., horizontal scaling, vertical scaling)",
+    "Percentage of reduction in latency or response time",
+    "Number of integrations with other systems or services",
+    "Average increase in processing power or computational resources used",
+    "Number of successful A/B testing iterations"
+  ]
+},
+    {
+  "title": "Art professional and Painter",
+  "description": "Ability to paint",
+  "weightage": 10,
+  "evaluationFactors": [
+    "Technical skill: Color theory application (scale: 1-5)",
+    "Technical skill: Brushwork technique execution (scale: 1-5)",
+    "Creativity in composition and design (scale: 1-5)",
+    "Professional portfolio quality and consistency",
+    "Ability to work under time pressure or deadline (scale: 1-5)",
+    "Adaptability to new techniques, materials, or styles (scale: 1-5)",
+    "Presentation and communication skills in art-related contexts",
+    "Body of work relevance to current industry trends"
+  ]
+}
   ]
 }
