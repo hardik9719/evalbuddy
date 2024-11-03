@@ -118,7 +118,7 @@ Part 2: Structured Analysis (in JSON format):
 Start your response with the narrative summary, followed by a line containing only '---', and then the JSON analysis.
 Ensure the JSON portion is valid JSON. Focus on technical accuracy and be specific about AI-related components if present.
 """
-    response = ollama_chat(prompt)
+    response = get_llm_response(prompt, 'text')
     return f"\nSummary of {file_path}:\n{response}\n"
 
 def evaluate_project(doc_text, code_summary):
@@ -161,58 +161,46 @@ Your evaluation should be in JSON format like this:
 Please analyze the contents of the zip file, provide the requested information for both parts, and evaluate the project. Your response should be in valid JSON format only, without any additional explanation.
 
 """
-#     prompt = f"""
-# You are an expert project evaluator assessing submissions based on specific criteria. Using the project description and code summary provided, evaluate the project on the following criteria. Provide a score from 1 to 10 for each criterion and justify your scoring.
+    return get_llm_response(prompt, 'json')
 
-# Criteria:
-# 1. Market Potential and Business Viability
-# 2. AI Integration and Innovation
-# 3. Creativity Level
-
-# Project Description:
-# {doc_text}
-
-# Code Summary:
-# {code_summary}
-
-# Your evaluation should be in JSON format like this:
-# {{
-#     "Market Potential and Business Viability": {{
-#         "score": <score>,
-#         "justification": "<justification>"
-#     }},
-#     "AI Integration and Innovation": {{
-#         "score": <score>,
-#         "justification": "<justification>"
-#     }},
-#     "Creativity Level": {{
-#         "score": <score>,
-#         "justification": "<justification>"
-#     }}
-# }}
-
-# Provide only the JSON response.
-# """
+def get_llm_response(prompt, response_type='text', model='llama2'):
+    """
+    Generic function to get responses from the LLM
     
-    response = ollama_chat(prompt)
-    # Attempt to parse the JSON response
-    try:
-        evaluation = json.loads(response)
-    except json.JSONDecodeError:
-        # If JSON parsing fails, attempt to extract JSON from text
-        start_index = response.find('{')
-        end_index = response.rfind('}') + 1
-        json_text = response[start_index:end_index]
-        evaluation = json.loads(json_text)
-    return evaluation
-
-def ollama_chat(prompt, model='llama2'):
+    Args:
+        prompt (str): The prompt to send to the model
+        response_type (str): The type of response expected ('text', 'json', or 'list')
+        model (str): The model to use (default: 'llama2')
+    
+    Returns:
+        The processed response based on response_type
+    """
     messages = [{'role': 'user', 'content': prompt}]
     response = ''
+    
+    # Get the raw response
     for chunk in ollama.chat(model=model, messages=messages, stream=True):
         if 'message' in chunk:
             response += chunk['message']['content']
-    return response.strip()
+    response = response.strip()
+    
+    # Process based on expected response type
+    if response_type == 'json':
+        try:
+            return json.loads(response)
+        except json.JSONDecodeError:
+            # Attempt to extract JSON from text
+            start_index = response.find('{')
+            end_index = response.rfind('}') + 1
+            json_text = response[start_index:end_index]
+            return json.loads(json_text)
+    elif response_type == 'list':
+        try:
+            return eval(response)
+        except:
+            return ["Error: Invalid response format"]
+    else:
+        return response
 
 
 url  = "https://github.com/dougdragon/browser-info.git"
@@ -222,10 +210,10 @@ url  = "https://github.com/jimmc414/code_lens_llm.git"
 code_summary = summarize_codebase(url,True)
 print(code_summary)
 # # Then read the project description
-with open('project_description.txt', 'r', encoding='utf-8') as doc_file:
-    doc_text = doc_file.read()
+# with open('project_description.txt', 'r', encoding='utf-8') as doc_file:
+#     doc_text = doc_file.read()
 
-# # Now evaluate both together
-evaluation = evaluate_project(doc_text, code_summary)
-print(json.dumps(evaluation, indent=2))  # Pretty print the results
+# # # Now evaluate both together
+# evaluation = evaluate_project(doc_text, code_summary)
+# print(json.dumps(evaluation, indent=2))  # Pretty print the results
 

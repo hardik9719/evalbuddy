@@ -10,6 +10,39 @@ st.set_page_config(layout="wide", page_title="Project Evaluation Dashboard")
 # Main title
 st.title("🎯 Project Evaluation Dashboard")
 
+metrics = []
+# Function to simulate getting evaluation factors from a language model
+def get_evaluation_factors(title, description):
+    # This is a placeholder for the actual call to a language model
+    # Replace this with the actual API call to get evaluation factors
+    prompt = f"Title: {title}\nDescription: {description}\nProvide key evaluation factors:"
+    # Simulate response
+    return ["Factor 1", "Factor 2", "Factor 3"]
+
+# Add a form to accept metric title and description
+st.subheader("Add New Metric")
+with st.form("metric_form"):
+    metric_title = st.text_input("Metric Title")
+    metric_description = st.text_area("Metric Description")
+    submitted = st.form_submit_button("Submit")
+
+    if submitted:
+        # Get evaluation factors using the language model
+        evaluation_factors = get_evaluation_factors(metric_title, metric_description)
+        
+        # Create a new metric entry
+        new_metric = {
+            "id": len(metrics) + 1,  # Assuming 'metrics' is a list of existing metrics
+            "title": metric_title,
+            "description": metric_description,
+            "weightage": 0,  # Default weightage, can be adjusted later
+            "evaluationFactors": evaluation_factors
+        }
+        
+        # Display the new metric
+        st.json(new_metric)
+        st.success("New metric added successfully!")
+
 # Create columns for layout
 col1, col2 = st.columns([1, 2])
 
