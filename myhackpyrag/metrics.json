@@ -1,0 +1,49 @@
+{
+  "metrics": [
+    {
+      "id": 1,
+      "title": "Market Potential and Business Viability",
+      "description": "Evaluates the project's potential for real-world application and commercial success. This metric considers factors such as addressing a clear market need or gap, the potential target audience size and reach, the unique selling proposition (USP) compared to existing solutions, the revenue model or monetization strategy (if applicable), feasibility of implementation in the real world, and potential for attracting investors or stakeholders. This metric helps assess whether the project has the potential to evolve beyond the hackathon into a viable product or service. It encourages participants to think about the practical applications and business aspects of their ideas, which is often a crucial factor in determining a project's overall success and impact.",
+      "weightage": 30,
+      "evaluationFactors": [
+        "Addressing a clear market need or gap",
+        "Potential target audience size and reach",
+        "Unique selling proposition (USP) compared to existing solutions",
+        "Revenue model or monetization strategy (if applicable)",
+        "Feasibility of implementation in the real world",
+        "Potential for attracting investors or stakeholders"
+      ]
+    },
+    {
+      "id": 2,
+      "title": "AI Integration and Innovation",
+      "description": "Evaluates the project's effective use and integration of artificial intelligence technologies. This metric considers factors such as the relevance and appropriateness of AI application to the problem at hand, sophistication and complexity of AI models or algorithms employed, innovative use of AI beyond common applications, integration of multiple AI technologies or techniques (e.g., NLP, computer vision, machine learning), ethical considerations and responsible AI practices, performance and accuracy of AI components, and scalability of the AI solution. This metric helps assess how well the project leverages AI to solve problems or create value. It encourages participants to think critically about AI implementation, pushing beyond surface-level applications to create truly innovative and impactful AI-driven solutions. The metric also considers the ethical implications and real-world feasibility of the AI components, ensuring that projects not only showcase technical prowess but also demonstrate responsible and practical AI usage.",
+      "weightage": 40,
+      "evaluationFactors": [
+        "Relevance and appropriateness of AI application to the problem at hand",
+        "Sophistication and complexity of AI models or algorithms employed",
+        "Innovative use of AI beyond common applications",
+        "Integration of multiple AI technologies or techniques (e.g., NLP, computer vision, machine learning)",
+        "Ethical considerations and responsible AI practices",
+        "Performance and accuracy of AI components",
+        "Scalability of the AI solution"
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Creativity Level",
+      "description": "Evaluates the project's originality, innovation, and out-of-the-box thinking. This metric considers factors such as the uniqueness of the core idea or concept, novel approaches to solving existing problems, innovative combinations of technologies or methodologies, unconventional user interactions or interfaces, creative use of data or resources, originality in design (both visual and functional), unexpected or surprising features that add value, and reimagining traditional concepts or processes. This metric helps assess how well the project pushes boundaries and introduces fresh ideas. It encourages participants to think beyond conventional solutions and rewards those who take creative risks. The Creativity Level metric values projects that stand out from the crowd, either through entirely new concepts or through innovative twists on existing ideas. It also considers the creative aspects of both the technical implementation and the user-facing elements of the project.",
+      "weightage": 30,
+      "evaluationFactors": [
+        "Uniqueness of the core idea or concept",
+        "Novel approaches to solving existing problems",
+        "Innovative combinations of technologies or methodologies",
+        "Unconventional user interactions or interfaces",
+        "Creative use of data or resources",
+        "Originality in design, both visual and functional",
+        "Unexpected or surprising features that add value",
+        "Reimagining traditional concepts or processes"
+      ]
+    }
+  ]
+}
