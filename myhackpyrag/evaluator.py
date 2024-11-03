@@ -133,6 +133,7 @@ Ensure the JSON portion is valid JSON. Focus on technical accuracy and be specif
     return f"\nSummary of {file_path}:\n{response}\n"
 
 def evaluate_project(doc_text, code_summary):
+    print('Inside eval')
     with open('metrics.json', 'r') as f:
         metrics_data = json.load(f)
 
@@ -162,12 +163,13 @@ def evaluate_project(doc_text, code_summary):
     {output_structure_str}
 
     Replace <score> with a number from 1 to 10, and <justification> with proper highly critique justification and reasoning for the evaluation.
-
+    Don't give N/A as score make it 0 if not applicable
     Provide your evaluation in valid JSON format only, without any additional explanation.
     """
 
     # Here you would call your LLM (e.g., Ollama) with this prompt
     # For demonstration, I'll just return the prompt
+    print('asking prompt')
     return get_llm_response(prompt, 'json')
 
 def get_llm_response(prompt, response_type='text', model='llama3.2'):
