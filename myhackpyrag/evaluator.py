@@ -1,11 +1,16 @@
 # evaluator.py
-
+import io
 import os
 import tempfile
+import time
 import zipfile
 import shutil
 import json
+from urllib import request
+
 import ollama
+import pathspec
+
 
 def extract_text_from_document(doc_file):
     """
@@ -20,61 +25,67 @@ def extract_text_from_document(doc_file):
     text = doc_file.read().decode('utf-8', errors='ignore')
     return text
 
-def summarize_codebase(source, is_github_link=False):
-    temp_dir = tempfile.mkdtemp()  # Still need this for extracted files
-    
+def extract_and_summarize_code(source, is_github_link):
+    start = time.perf_counter()
+    temp_dir = tempfile.mkdtemp()  # Temporary directory for extracted files
+
+    # Download and extract if it's a GitHub repository
     if is_github_link:
-        from urllib import request
-        import io
-        
         # Convert GitHub URL to ZIP download URL
-        if 'github.com' in source:
-            repo_path = source.replace('https://github.com/', '').rstrip('.git')
-        else:
-            repo_path = source
-            
-        # Try 'main' branch first, then 'master' if that fails
-        branches = ['main', 'master']
-        success = False
-        
-        for branch in branches:
-            zip_url = f'https://github.com/{repo_path}/archive/refs/heads/{branch}.zip'
-            try:
-                response = request.urlopen(zip_url)
-                zip_data = io.BytesIO(response.read())
-                with zipfile.ZipFile(zip_data) as zip_ref:
-                    zip_ref.extractall(temp_dir)
-                success = True
-                break
-            except Exception:
-                continue
-                
-        if not success:
-            raise ValueError("Failed to download GitHub repository: Neither 'main' nor 'master' branch found")
-            
+        repo_path = source.replace('https://github.com/', '').rstrip('.git')
+        zip_url = f'https://github.com/{repo_path}/archive/refs/heads/master.zip'
+        try:
+            response = request.urlopen(zip_url)
+            zip_data = io.BytesIO(response.read())
+            with zipfile.ZipFile(zip_data) as zip_ref:
+                zip_ref.extractall(temp_dir)
+        except Exception as e:
+            print(f"Error downloading or extracting GitHub repo: {e}")
+            shutil.rmtree(temp_dir)
+            return None
     else:
         # Handle uploaded ZIP file directly
         with zipfile.ZipFile(source) as zip_ref:
             zip_ref.extractall(temp_dir)
 
+    # Load .gitignore file if it exists
+    gitignore_path = os.path.join(temp_dir, '.gitignore')
+    if os.path.exists(gitignore_path):
+        with open(gitignore_path, 'r') as gitignore_file:
+            gitignore_rules = gitignore_file.read().splitlines()
+        gitignore_spec = pathspec.PathSpec.from_lines("gitwildmatch", gitignore_rules)
+    else:
+        gitignore_spec = None
+
     # Process the files and create summary
     all_code = ""
+
     for root, dirs, files in os.walk(temp_dir):
+        print(files)
         for file in files:
             file_path = os.path.join(root, file)
+            # Check if the file should be ignored
+            relative_path = os.path.relpath(file_path, temp_dir)
+            if gitignore_spec and gitignore_spec.match_file(relative_path):
+                continue  # Skip ignored files
+
             try:
                 with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
                     file_content = f.read()
                     all_code += f"\n\n=== File: {file_path} ===\n"
                     all_code += file_content
-            except Exception:
+            except Exception as e:
+                print(f"Error reading file {file_path}: {e}")
                 continue
 
     # Clean up and return
     shutil.rmtree(temp_dir)
+    end = time.perf_counter()
+    print(f'Took {end-start:.3f} seconds')
     return summarize_code(all_code, "Complete Codebase")
 
 def summarize_code(code, file_path):
+    start = time.perf_counter()
     prompt = f"""
 You are an expert code analyzer. Please analyze the following code file and provide both a detailed narrative summary and structured analysis.
 
@@ -116,6 +127,9 @@ Start your response with the narrative summary, followed by a line containing on
 Ensure the JSON portion is valid JSON. Focus on technical accuracy and be specific about AI-related components if present.
 """
     response = get_llm_response(prompt, 'text')
+    end = time.perf_counter()
+    print(f' SUMMARIZE : Took {end-start:.3f} seconds')
+
     return f"\nSummary of {file_path}:\n{response}\n"
 
 def evaluate_project(doc_text, code_summary):
@@ -159,18 +173,18 @@ def evaluate_project(doc_text, code_summary):
 def get_llm_response(prompt, response_type='text', model='llama3.2'):
     """
     Generic function to get responses from the LLM
-    
+
     Args:
         prompt (str): The prompt to send to the model
         response_type (str): The type of response expected ('text', 'json', or 'list')
         model (str): The model to use (default: 'llama2')
-    
+
     Returns:
         The processed response based on response_type
     """
     messages = [{'role': 'user', 'content': prompt}]
     response = ''
-    
+
     # Get the raw response
     for chunk in ollama.chat(model=model, messages=messages, stream=True):
         if 'message' in chunk:
@@ -230,20 +244,24 @@ Ensure each factor is concise but descriptive enough to be useful for evaluation
 
 
 # url  = "https://github.com/dougdragon/browser-info.git"
-url  = "https://github.com/jimmc414/code_lens_llm.git"
-# First get the code summary
-# with open('test_urls.py.zip', 'rb') as zip_file:
-code_summary = summarize_codebase(url,True)
-print(code_summary)
-# Then read the project description
-with open('project_description.txt', 'r', encoding='utf-8') as doc_file:
-    doc_text = doc_file.read()
-
-# # Now evaluate both together
-evaluation = evaluate_project(doc_text, code_summary)
-print(json.dumps(evaluation, indent=2))  # Pretty print the results
+# url  = "https://github.com/jimmc414/code_lens_llm.git"
+# # First get the code summary
+# # with open('test_urls.py.zip', 'rb') as zip_file:
+# code_summary = summarize_codebase(url,True)
+# print(code_summary)
+# # Then read the project description
+# with open('project_description.txt', 'r', encoding='utf-8') as doc_file:
+#     doc_text = doc_file.read()
+#
+# # # Now evaluate both together
+# evaluation = evaluate_project(doc_text, code_summary)
+# print(json.dumps(evaluation, indent=2))  # Pretty print the results
 # if __name__ =='__main__':
 #     print(generate_evaluation_factors('Design Patterns',' Best Desgin patterns'))
 #     print(generate_evaluation_factors('10th Grade Project Exhibition',' Simple and easy to parse'))
 #     print(generate_evaluation_factors('Senior solutions architect',' Scalable solution'))
+
 #     print(generate_evaluation_factors('Art professional and Painter',' Ability to paint'))
+# summarize_codebase("https://github.com/hardik9719/Djangodemo.git",True)
+# summarize_codebase("https://github.com/hardik9719/Codeforces.git",True)
+# extract_and_summarize_code("https://github.com/hardik9719/creator-verse.git",True)

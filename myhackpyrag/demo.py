@@ -3,7 +3,7 @@ import pandas as pd
 import plotly.express as px
 import random
 import json
-from evaluator import generate_evaluation_factors
+from evaluator import extract_and_summarize_code, generate_evaluation_factors
 
 # Page configuration
 st.set_page_config(layout="wide", page_title="Project Evaluation Dashboard")
@@ -87,8 +87,10 @@ with col1:
     selected_domain = st.selectbox("Select Project Domain", domains)
     
     st.subheader("Project Details")
-    project_name = st.text_input("Project Name")
-    project_description = st.text_area("Project Description")
+    github_link = st.text_input("GitHub File Link")
+    if st.button("Extract and Summarize Code"):
+        code_summary = extract_and_summarize_code(github_link, True)
+        st.text_area("Code Summary", code_summary)
     
     # File upload section
     st.subheader("Upload Project Files")
