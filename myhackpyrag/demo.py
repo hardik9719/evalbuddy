@@ -1,3 +1,4 @@
+import time
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -89,14 +90,24 @@ with col1:
     st.subheader("Project Details")
     github_link = st.text_input("GitHub File Link")
     if st.button("Extract and Summarize Code"):
+        start_time = time.time()
         code_summary = extract_and_summarize_code(github_link, True)
+        end_time = time.time()
         st.text_area("Code Summary", code_summary)
+        st.info(f"Summary computation took {end_time - start_time:.3f} seconds")
     
     # File upload section
     st.subheader("Upload Project Files")
     uploaded_slides = st.file_uploader("Upload Presentation Slides", type=["pdf", "ppt", "pptx"])
     uploaded_docs = st.file_uploader("Upload Additional Documents", type=["pdf", "doc", "docx"])
-    github_link = st.text_input("GitHub Repository Link")
+    uploaded_zip = st.file_uploader("Upload Additional Zip", type=["zip"])
+    if uploaded_zip:
+        if st.button("Extract and Summarize ZIP"):
+            start_time = time.time()
+            code_summary = extract_and_summarize_code(uploaded_zip, False)
+            end_time = time.time()
+            st.text_area("Code Summary", code_summary)
+            st.info(f"Summary computation took {end_time - start_time:.3f} seconds")
 
 with col2:
     st.subheader("Evaluation Metrics")
