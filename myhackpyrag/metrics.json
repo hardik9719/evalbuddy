@@ -43,45 +43,58 @@
       ]
     },
     {
-        "title": "10th Grade Project Exhibition",
-        "description": "Simple and easy to parse",
-        "weightage": 10,
-        "evaluationFactors": [
-          "Alignment with 10th grade curriculum learning objectives (scale: 1-5)",
-          "Project presentation quality (clarity, coherence, visual appeal) (scale: 1-5)",
-          "Student engagement and participation during project demonstration (scale: 1-5)",
-          "Quality of research and analysis conducted by students (scale: 1-5)",
-          "Demonstrated understanding of project constraints and assumptions",
-          "Project impact on 10th grade learning outcomes (as observed through student feedback) (scale: 1-5)"
-        ]
-      },
+      "title": "10th Grade Project Exhibition",
+      "description": "Simple and easy to parse",
+      "weightage": 10,
+      "evaluationFactors": [
+        "Alignment with 10th grade curriculum learning objectives (scale: 1-5)",
+        "Project presentation quality (clarity, coherence, visual appeal) (scale: 1-5)",
+        "Student engagement and participation during project demonstration (scale: 1-5)",
+        "Quality of research and analysis conducted by students (scale: 1-5)",
+        "Demonstrated understanding of project constraints and assumptions",
+        "Project impact on 10th grade learning outcomes (as observed through student feedback) (scale: 1-5)"
+      ]
+    },
     {
-  "title": "Senior Solutions Architect",
-  "description": "Scalable Solution",
-  "weightage": 10,
-  "evaluationFactors": [
-    "Number of concurrent users supported by the solution",
-    "Total scalability factor (e.g., horizontal scaling, vertical scaling)",
-    "Percentage of reduction in latency or response time",
-    "Number of integrations with other systems or services",
-    "Average increase in processing power or computational resources used",
-    "Number of successful A/B testing iterations"
-  ]
-},
+      "title": "Senior Solutions Architect",
+      "description": "Scalable Solution",
+      "weightage": 10,
+      "evaluationFactors": [
+        "Number of concurrent users supported by the solution",
+        "Total scalability factor (e.g., horizontal scaling, vertical scaling)",
+        "Percentage of reduction in latency or response time",
+        "Number of integrations with other systems or services",
+        "Average increase in processing power or computational resources used",
+        "Number of successful A/B testing iterations"
+      ]
+    },
     {
-  "title": "Art professional and Painter",
-  "description": "Ability to paint",
-  "weightage": 10,
-  "evaluationFactors": [
-    "Technical skill: Color theory application (scale: 1-5)",
-    "Technical skill: Brushwork technique execution (scale: 1-5)",
-    "Creativity in composition and design (scale: 1-5)",
-    "Professional portfolio quality and consistency",
-    "Ability to work under time pressure or deadline (scale: 1-5)",
-    "Adaptability to new techniques, materials, or styles (scale: 1-5)",
-    "Presentation and communication skills in art-related contexts",
-    "Body of work relevance to current industry trends"
-  ]
-}
+      "title": "Art professional and Painter",
+      "description": "Ability to paint",
+      "weightage": 10,
+      "evaluationFactors": [
+        "Technical skill: Color theory application (scale: 1-5)",
+        "Technical skill: Brushwork technique execution (scale: 1-5)",
+        "Creativity in composition and design (scale: 1-5)",
+        "Professional portfolio quality and consistency",
+        "Ability to work under time pressure or deadline (scale: 1-5)",
+        "Adaptability to new techniques, materials, or styles (scale: 1-5)",
+        "Presentation and communication skills in art-related contexts",
+        "Body of work relevance to current industry trends"
+      ]
+    },
+    {
+      "title": "Sculptor",
+      "description": "Molding capability soft hands",
+      "weightage": 10,
+      "evaluationFactors": [
+        "Ability to accurately capture fine details in hand shapes and models",
+        "Frequency of successful molding trials without breaking or deforming the model",
+        "Number of unique mold designs created within a given timeframe",
+        "Time-to-market for new mold designs",
+        "Customer satisfaction rating (based on feedback from real-world applications)",
+        "Average size reduction in material usage compared to traditional methods"
+      ]
+    }
   ]
 }

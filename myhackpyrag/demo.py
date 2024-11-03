@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import random
-from PIL import Image
 import json
 from evaluator import generate_evaluation_factors
 
@@ -25,13 +24,8 @@ def get_evaluation_factors(title, description):
             metrics = data.get('metrics', [])
     except FileNotFoundError:
         metrics = []
-    
-    # Create new metric object
-  
-    
     # Add to metrics list and save
-    new_metric["id"] = len(metrics) + 1
-    print(new_metric) 
+    print(new_metric)
     metrics.append(new_metric)
     with open('metrics.json', 'w') as f:
         json.dump({"metrics": metrics}, f, indent=2)
@@ -39,6 +33,28 @@ def get_evaluation_factors(title, description):
 
 # Add a form to accept metric title and description
 st.subheader("Add New Metric")
+
+
+def render_radar_chart():
+    with open('metrics.json', 'r') as f:
+        data = json.load(f)
+        metrics = data.get('metrics', [])
+
+    df = pd.DataFrame(dict(
+        r=[random.randint(0, 10) for _ in range(len(metrics))],
+        theta=[metric['title'] for metric in metrics]
+    ))
+
+    fig = px.line_polar(df, r='r', theta='theta', line_close=True)
+    fig.update_layout(
+        polar=dict(radialaxis=dict(visible=True, range=[0, 10])),
+        showlegend=False
+    )
+    return fig
+chart_placeholder = st.empty()
+
+# Initial render of the chart
+chart_placeholder.plotly_chart(render_radar_chart())
 with st.form("metric_form"):
     metric_title = st.text_input("Metric Title")
     metric_description = st.text_area("Metric Description")
@@ -50,16 +66,17 @@ with st.form("metric_form"):
         
         # Create a new metric entry
         new_metric = {
-            "id": len(metrics) + 1,  # Assuming 'metrics' is a list of existing metrics
             "title": metric_title,
             "description": metric_description,
-            "weightage": 0,  # Default weightage, can be adjusted later
+            "weightage": 100,  # Default weightage, can be adjusted later
             "evaluationFactors": evaluation_factors
         }
         
         # Display the new metric
         st.json(new_metric)
         st.success("New metric added successfully!")
+        # Re-render the radar chart
+        chart_placeholder.plotly_chart(render_radar_chart())
 
 # Create columns for layout
 col1, col2 = st.columns([1, 2])
@@ -90,26 +107,12 @@ with col2:
     
     # Creativity Level
     st.markdown("### Innovation Metrics")
-    def radar_chart():
-        # Read metrics from json file
-        with open('metrics.json', 'r') as f:
-            data = json.load(f)
-            metrics = data.get('metrics', [])
-        
-        # Create dataframe using metric titles
-        df = pd.DataFrame(dict(
-            r=[random.randint(0, 10) for _ in range(len(metrics))],
-            theta=[metric['title'] for metric in metrics]
-        ))
-        
-        fig = px.line_polar(df, r='r', theta='theta', line_close=True)
-        fig.update_layout(
-            polar=dict(radialaxis=dict(visible=True, range=[0, 10])),
-            showlegend=False
-        )
-        st.plotly_chart(fig)
 
-    radar_chart() 
+
+
+
+
+
     
     # Impact Assessment
     st.markdown("### Impact Assessment")
