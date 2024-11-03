@@ -1,92 +1,81 @@
 import streamlit as st
-import ollama
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.document_loaders import WebBaseLoader
-from langchain_community.vectorstores import Chroma
-from langchain_community.embeddings import OllamaEmbeddings
-import random
-import plotly.express as px
 import pandas as pd
+import plotly.express as px
+import random
+from PIL import Image
 
-# Setup Streamlit interface
-st.title("Chat with Webpage 🌐")
-st.caption("This app allows you to chat with a webpage using local Llama-2 and RAG")
+# Page configuration
+st.set_page_config(layout="wide", page_title="Project Evaluation Dashboard")
 
-# Radar chart function
-def radar_chart(val):  
-    df = pd.DataFrame(dict(
-    r=[random.randint(0,val),
-       random.randint(0,val),
-       random.randint(0,val),
-       random.randint(0,val),
-       random.randint(0,val)],
-    theta=['processing cost','mechanical properties','chemical stability',
-           'thermal stability', 'device integration']))
-    fig = px.line_polar(df, r='r', theta='theta', line_close=True)
-    st.write(fig)
+# Main title
+st.title("🎯 Project Evaluation Dashboard")
 
-# Add radar chart section
-st.subheader("Radar Chart Demo")
-val = st.slider('Select value', 0, 10, 1)
-radar_chart(val)
+# Create columns for layout
+col1, col2 = st.columns([1, 2])
 
-# Add Python code analysis section
-python_code = st.text_area("Enter Python code to analyze", height=200)
-analyze_button = st.button("Analyze Code")
-
-if analyze_button and python_code:  # Only run analysis when button is clicked and code exists
-    prompt = f"""Analyze this Python code and provide:
-    1. Brief summary
-    2. Main functionality
-    3. Key components/libraries used
-    4. Potential improvements (if any)
+with col1:
+    st.subheader("Domain Selection")
+    domains = ["Health", "Education", "Finance", "Environment", "Technology"]
+    selected_domain = st.selectbox("Select Project Domain", domains)
     
-    Code:
-    {python_code}"""
+    st.subheader("Project Details")
+    project_name = st.text_input("Project Name")
+    project_description = st.text_area("Project Description")
     
-    with st.spinner('Analyzing code...'):  # Add loading indicator
-        response = ollama.chat(model='llama2', messages=[{'role': 'user', 'content': prompt}])
-        
-        with st.card("Code Analysis Summary"):
-            st.markdown(response['message']['content'])
-            st.divider()
-            st.caption("Analysis provided by Llama-2")
+    # File upload section
+    st.subheader("Upload Project Files")
+    uploaded_slides = st.file_uploader("Upload Presentation Slides", type=["pdf", "ppt", "pptx"])
+    uploaded_docs = st.file_uploader("Upload Additional Documents", type=["pdf", "doc", "docx"])
+    github_link = st.text_input("GitHub Repository Link")
 
-# Get webpage URL input
-webpage_url = st.text_input("Enter Webpage URL", type="default")
+with col2:
+    st.subheader("Evaluation Metrics")
+    
+    # AI Usage Metric
+    st.markdown("### AI Integration Score")
+    ai_score = random.randint(60, 95)
+    st.progress(ai_score/100)
+    st.caption(f"AI Usage Score: {ai_score}%")
+    
+    # Creativity Level
+    st.markdown("### Innovation Metrics")
+    def radar_chart(val=7):  
+        df = pd.DataFrame(dict(
+            r=[random.randint(0,val) for _ in range(5)],
+            theta=['AI Integration', 'Technical Innovation', 'Problem Solving',
+                  'Market Potential', 'Scalability']))
+        fig = px.line_polar(df, r='r', theta='theta', line_close=True)
+        fig.update_layout(
+            polar=dict(radialaxis=dict(visible=True, range=[0, 10])),
+            showlegend=False
+        )
+        st.plotly_chart(fig)
 
-if webpage_url:
-    # Load and process webpage data
-    loader = WebBaseLoader(webpage_url)
-    docs = loader.load()
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=10)
-    splits = text_splitter.split_documents(docs)
+    radar_chart()
+    
+    # Impact Assessment
+    st.markdown("### Impact Assessment")
+    impact_metrics = {
+        "Social Impact": random.randint(1, 10),
+        "Technical Achievement": random.randint(1, 10),
+        "Market Potential": random.randint(1, 10)
+    }
+    
+    for metric, value in impact_metrics.items():
+        st.metric(metric, f"{value}/10")
 
-    # Create embeddings and vector store
-    embeddings = OllamaEmbeddings(model="llama3.2")
-    vectorstore = Chroma.from_documents(documents=splits, embedding=embeddings)
+# Action buttons
+col1, col2, col3 = st.columns(3)
+with col1:
+    if st.button("Evaluate Project"):
+        st.success("Project evaluation completed!")
+with col2:
+    if st.button("Generate Report"):
+        st.info("Generating comprehensive report...")
+with col3:
+    if st.button("Save Results"):
+        st.info("Saving evaluation results...")
 
-    # Define Llama-3 model function
-    def ollama_llm(question, context):
-        formatted_prompt = f"Question: {question}\n\nContext: {context}"
-        response = ollama.chat(model='llama3.2', messages=[{'role': 'user', 'content': formatted_prompt}])
-        return response['message']['content']
-
-    # Setup RAG chain
-    retriever = vectorstore.as_retriever()
-
-    def combine_docs(docs):
-        return "\n\n".join(doc.page_content for doc in docs)
-
-    def rag_chain(question):
-        retrieved_docs = retriever.invoke(question)
-        formatted_context = combine_docs(retrieved_docs)
-        return ollama_llm(question, formatted_context)
-
-    st.success(f"Loaded {webpage_url} successfully!")
-
-    # Chat interface
-    prompt = st.text_input("Ask any question about the webpage")
-    if prompt:
-        result = rag_chain(prompt)
-        st.write(result)
+# Footer
+st.markdown("---")
+st.caption("Project Evaluation Dashboard v1.0")
